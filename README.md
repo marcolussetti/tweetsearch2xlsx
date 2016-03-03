@@ -7,7 +7,7 @@ It is also very inflexible, as it currently does not treat tweets as individual 
 
 ##Usage
 ```
-$ ./tweetsearch2xlsx [-o outputfile.xlsx] inputfile.html
+$ ./tweetsearch2xlsx.py [-o outputfile.xlsx] inputfile.html
 ```
 
 If output is not specified, it will assume the same filename as input is desired with the correct extension.
