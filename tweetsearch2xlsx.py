@@ -1,6 +1,5 @@
 #!/usr/bin/env python3
-"""Generate an Excel file from a saved Twitter search
-"""
+"""Generate an Excel file from a saved Twitter search"""
 
 import argparse
 import lxml.html
@@ -10,12 +9,8 @@ from datetime import datetime
 
 __author__ = "Marco Lussetti"
 __copyright__ = "Copyright (c) 2016, Marco Lussetti"
-__credits__ = ["Marco Lussetti"]
 __license__ = "MIT"
 __version__ = "0.0.1"
-__maintainer__ = "Marco Lussetti"
-__email__ = "marco@marcolussetti.com"
-__status__ = "Development"
 
 parser = argparse.ArgumentParser()
 
