@@ -1,27 +1,40 @@
-#! python3
+#!/usr/bin/env python3
+"""Generate an Excel file from a saved Twitter search
+"""
 
-# Take a saved twitter search (HTML file) and return the data as a MS Excel file (xlsx file)
-# Copyright (c) 2016 Marco Lussetti.
-
+import argparse
+import lxml.html
 import sys
+import xlsxwriter
 from datetime import datetime
 
-import lxml.html
-import xlsxwriter
+__author__ = "Marco Lussetti"
+__copyright__ = "Copyright (c) 2016, Marco Lussetti"
+__credits__ = ["Marco Lussetti"]
+__license__ = "MIT"
+__version__ = "0.0.1"
+__maintainer__ = "Marco Lussetti"
+__email__ = "marco@marcolussetti.com"
+__status__ = "Development"
 
-# If no arguments provided, ask user for input
+parser = argparse.ArgumentParser()
 
-if len(sys.argv) == 3:
-    input_path = sys.argv[1]
-    output_path = sys.argv[2]
+parser.add_argument('infile', nargs="?", type = argparse.FileType("r"), default=sys.stdin,help = "input file (html)")
+parser.add_argument("-o", "--output", dest = "output_path", help = "output file (xlsx)")
+
+args = parser.parse_args()
+
+if not args.output_path:
+    if "<stdin>" in args.infile.name:
+        sys.exit("You must provide an output file if reading from stdin! Use ""-o file.xlsx""")
+    else:
+        output_path = args.infile.name.split(".")[0] + ".xlsx"
 else:
-    input_path = input("Enter input file with path: ")
-    output_path = input("Enter output file with path: ")
+    output_path = args.output_path
 
-# Open file
-myfile = open(input_path, encoding="Latin-1")
-myfileAsAString = myfile.read()
-tree = lxml.html.fromstring(myfileAsAString)
+input_string = args.infile.read()
+args.infile.close()
+tree = lxml.html.fromstring(input_string)
 
 # Extract the list of dates
 extracted_dates = tree.xpath('//*[@class[starts-with(., "tweet-timestamp js-permalink js-nav js-tooltip")]]')
@@ -41,7 +54,7 @@ for username in extracted_usernames:
 
 # Extract list of retweets
 extracted_retweets = tree.xpath(
-    '//*[@class="ProfileTweet-action--retweet u-hiddenVisually"]/span[@class="ProfileTweet-actionCount"]/span[@class="ProfileTweet-actionCountForAria"]')
+    '//*[@class="ProfileTweet-action--retweet u-hiddenVisually"]/span/span[@class="ProfileTweet-actionCountForAria"]')
 retweets = []
 for retweet in extracted_retweets:
     if "retweets" in retweet.text:
@@ -53,7 +66,7 @@ for retweet in extracted_retweets:
 
 # Extract list of likes
 extracted_likes = tree.xpath(
-    '//*[@class="ProfileTweet-action--favorite u-hiddenVisually"]/span[@class="ProfileTweet-actionCount"]/span[@class="ProfileTweet-actionCountForAria"]')
+    '//*[@class="ProfileTweet-action--favorite u-hiddenVisually"]/span/span[@class="ProfileTweet-actionCountForAria"]')
 likes = []
 for like in extracted_likes:
     if " likes" in like.text:
