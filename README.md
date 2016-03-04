@@ -16,3 +16,7 @@ If output is not specified, it will assume the same filename as input is desired
 This python3 script relies on third-party libraries lxml and xlsxwriter.
 
 You can find an unnofficial binary version of lxml for Windows platforms at http://www.lfd.uci.edu/~gohlke/pythonlibs/#lxml
+
+##Known bugs
+- Doesn't run on Windows due to file encoding issues (files saved as Latin1 but attempts to read as utf-8)
+- Does not properly handle issues with sub-tweet units (author, date, message): if any is missing, the entire list shifts and there's a resulting misattribution
